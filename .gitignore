@@ -1,0 +1,5 @@
+node_modules/
+layout.md
+variables.env
+*.json
+.next/
