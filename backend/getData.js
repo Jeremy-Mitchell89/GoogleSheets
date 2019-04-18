@@ -99,7 +99,6 @@ const listMajors = function listMajors(auth) {
     (err, res) => {
       if (err) return console.log("The API returned an error: " + err);
       const rows = res.data.values;
-      console.log(res.data);
       dataObj = {};
       if (rows.length) {
         // Print columns A and E, which correspond to indices 0 and 4.

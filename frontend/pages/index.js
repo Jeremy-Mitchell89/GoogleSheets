@@ -1,13 +1,9 @@
+import Items from "../components/Items";
+
 const Home = () => {
   return (
     <div>
-      <button
-        onClick={() => {
-          console.log("test");
-        }}
-      >
-        Test
-      </button>
+      <Items />
     </div>
   );
 };

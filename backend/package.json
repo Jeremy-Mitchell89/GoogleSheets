@@ -1,0 +1,24 @@
+{
+  "name": "googlesheets",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "next",
+    "build": "next build",
+    "start": "next start"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.18.3",
+    "cors": "^2.8.5",
+    "diskdb": "^0.1.17",
+    "express": "^4.16.4",
+    "googleapis": "^27.0.0",
+    "node-cron": "^2.0.3",
+    "react": "^16.8.6",
+    "react-dom": "^16.8.6"
+  }
+}
