@@ -6,7 +6,7 @@ let db = require("diskdb");
 db = db.connect("./db", ["inventory"]);
 
 // If modifying these scopes, delete token.json.
-const SCOPES = ["https://www.googleapis.com/auth/spreadsheets.readonly"];
+const SCOPES = ["https://www.googleapis.com/auth/spreadsheets"];
 // The file token.json stores the user's access and refresh tokens, and is
 // created automatically when the authorization flow completes for the first
 // time.
@@ -18,15 +18,22 @@ const TOKEN_PATH = "token.json";
 //   fs.readFile("credentials.json", (err, content) => {
 //     if (err) return console.log("Error loading client secret file:", err);
 //     // Authorize a client with credentials, then call the Google Sheets API.
-//     authorize(JSON.parse(content), listMajors);
+//     authorize(JSON.parse(content), getInventory);
 //   });
 // });
 const run = fs.readFile("credentials.json", (err, content) => {
   if (err) return console.log("Error loading client secret file:", err);
   // Authorize a client with credentials, then call the Google Sheets API.
-  authorize(JSON.parse(content), listMajors);
+  authorize(JSON.parse(content), getInventory);
 });
-
+function runScrap(row) {
+  fs.readFile("credentials.json", (err, content) => {
+    if (err) return console.log("Error loading client secret file:", err);
+    // Authorize a client with credentials, then call the Google Sheets API.
+    console.log(row);
+    authorize(JSON.parse(content), writeScrap);
+  });
+}
 /**
  * Create an OAuth2 client with the given credentials, and then execute the
  * given callback function.
@@ -89,29 +96,63 @@ const getNewToken = function getNewToken(oAuth2Client, callback) {
  * @see https://docs.google.com/spreadsheets/d/1BxiMVs0XRA5nFMdKvBdBZjgmUUqptlbs74OgvE2upms/edit
  * @param {google.auth.OAuth2} auth The authenticated Google OAuth client.
  */
-const listMajors = function listMajors(auth) {
+const getInventory = function getInventory(auth) {
   const sheets = google.sheets({ version: "v4", auth });
+  console.log(auth);
   sheets.spreadsheets.values.get(
     {
-      spreadsheetId: "1FbP2duAque-FZ5Xf53jZtzJfeAK3YYKzLvR-OC08zCU",
-      range: "inventory!E3:H"
+      spreadsheetId: "1cNb-lVgGn-doFdx-0SZRH5qLb73g_KTHsu1GqvPYrVI",
+      range: "Scrap!A3:F"
     },
     (err, res) => {
       if (err) return console.log("The API returned an error: " + err);
       const rows = res.data.values;
-      dataObj = {};
+      dataList = [];
       if (rows.length) {
-        // Print columns A and E, which correspond to indices 0 and 4.
-        rows.map(row => {
-          dataObj[row[0]] = row[3];
+        // add row number to value array so we can write scrap date back to sheet
+        rows.map((row, i) => {
+          row.push(i + 3);
+          dataList.push(row);
         });
       } else {
         console.log("No data found.");
       }
-      // console.log(dataObj);
-      db.inventory.save(dataObj);
+      const notScrapped = dataList.filter(camera => camera.length < 6);
+      db.inventory.save(notScrapped);
     }
   );
 };
 
-module.exports = { listMajors, getNewToken, authorize, run };
+const writeScrap = function writeScrap(auth, row) {
+  const sheets = google.sheets({ version: "v4", auth });
+  var spreadsheetId = "1cNb-lVgGn-doFdx-0SZRH5qLb73g_KTHsu1GqvPYrVI";
+  console.log(row);
+  var request = {
+    majorDimension: "ROWS",
+    values: [[new Date()]]
+  };
+  sheets.spreadsheets.values.update(
+    {
+      spreadsheetId,
+      range: "Scrap!E29",
+      valueInputOption: "USER_ENTERED",
+      resource: { values: [[new Date()]] }
+    },
+    (err, result) => {
+      if (err) {
+        console.log(err);
+      } else {
+        // console.log(result);
+      }
+    }
+  );
+};
+
+module.exports = {
+  getInventory,
+  getNewToken,
+  authorize,
+  run,
+  runScrap,
+  writeScrap
+};

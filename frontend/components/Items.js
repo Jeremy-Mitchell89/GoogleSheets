@@ -3,19 +3,27 @@ import axios from "axios";
 import Item from "./Item";
 
 class Items extends react.Component {
-  state = { inventory: {} };
+  state = { inventory: [] };
   componentWillMount() {
     axios.get("http://localhost:8000").then(res => {
-      console.log(res.data[0]);
-      this.setState({ inventory: res.data[0] });
+      console.log(res.data);
+      this.setState({ inventory: res.data });
     });
   }
   render() {
     return (
       <div>
-        {Object.keys(this.state.inventory).map((item, i) => {
+        {console.log(this.state)}
+        {this.state.inventory.map(entry => {
           return (
-            <Item key={i} item={item} quantity={this.state.inventory[item]} />
+            <Item
+              key={entry[3]}
+              item={entry[0]}
+              model={entry[1]}
+              serial={entry[2]}
+              control={entry[3]}
+              row={entry[4]}
+            />
           );
         })}
       </div>
