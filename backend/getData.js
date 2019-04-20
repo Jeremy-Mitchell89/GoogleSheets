@@ -31,7 +31,7 @@ function runScrap(row) {
     if (err) return console.log("Error loading client secret file:", err);
     // Authorize a client with credentials, then call the Google Sheets API.
     console.log(row);
-    authorize(JSON.parse(content), writeScrap);
+    authorize(JSON.parse(content), writeScrap, row);
   });
 }
 /**
@@ -40,7 +40,7 @@ function runScrap(row) {
  * @param {Object} credentials The authorization client credentials.
  * @param {function} callback The callback to call with the authorized client.
  */
-const authorize = function authorize(credentials, callback) {
+function authorize(credentials, callback, row) {
   const { client_secret, client_id, redirect_uris } = credentials.installed;
   const oAuth2Client = new google.auth.OAuth2(
     client_id,
@@ -52,9 +52,9 @@ const authorize = function authorize(credentials, callback) {
   fs.readFile(TOKEN_PATH, (err, token) => {
     if (err) return getNewToken(oAuth2Client, callback);
     oAuth2Client.setCredentials(JSON.parse(token));
-    callback(oAuth2Client);
+    callback(oAuth2Client, row);
   });
-};
+}
 
 /**
  * Get and store new token after prompting for user authorization, and then
@@ -98,7 +98,6 @@ const getNewToken = function getNewToken(oAuth2Client, callback) {
  */
 const getInventory = function getInventory(auth) {
   const sheets = google.sheets({ version: "v4", auth });
-  console.log(auth);
   sheets.spreadsheets.values.get(
     {
       spreadsheetId: "1cNb-lVgGn-doFdx-0SZRH5qLb73g_KTHsu1GqvPYrVI",
@@ -134,7 +133,7 @@ const writeScrap = function writeScrap(auth, row) {
   sheets.spreadsheets.values.update(
     {
       spreadsheetId,
-      range: "Scrap!E29",
+      range: `Scrap!E${row}`,
       valueInputOption: "USER_ENTERED",
       resource: { values: [[new Date()]] }
     },
@@ -142,7 +141,7 @@ const writeScrap = function writeScrap(auth, row) {
       if (err) {
         console.log(err);
       } else {
-        // console.log(result);
+        console.log(result);
       }
     }
   );
