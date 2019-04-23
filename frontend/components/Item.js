@@ -7,17 +7,6 @@ import Button from "@material-ui/core/Button";
 import Typography from "@material-ui/core/Typography";
 import axios from "axios";
 
-// const Item = props => {
-//   return (
-//     <div>
-//       <p>{props.item}</p>
-//       <p>{props.model}</p>
-//       <p>{props.serial}</p>
-//       <p>{props.control}</p>
-//     </div>
-//   );
-// };
-
 const styles = {
   card: {
     maxWidth: 275
@@ -36,7 +25,7 @@ const styles = {
 };
 
 function Item(props) {
-  const { classes, item, model, serial, control } = props;
+  const { classes, item, model, serial, control, passData } = props;
   const bull = <span className={classes.bullet}>•</span>;
   function writeToSheet() {
     axios
@@ -69,8 +58,14 @@ function Item(props) {
         </Typography>
       </CardContent>
       <CardActions>
-        <Button onClick={e => writeToSheet()} size="small">
-          Learn More
+        <Button
+          onClick={e => {
+            writeToSheet();
+            passData(serial);
+          }}
+          size="small"
+        >
+          Camera Scrapped
         </Button>
       </CardActions>
     </Card>

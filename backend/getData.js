@@ -39,6 +39,7 @@ function runScrap(row) {
  * given callback function.
  * @param {Object} credentials The authorization client credentials.
  * @param {function} callback The callback to call with the authorized client.
+ * @param {number} row The row upon which the data exists, needed for runScrap/writeScrap functions.
  */
 function authorize(credentials, callback, row) {
   const { client_secret, client_id, redirect_uris } = credentials.installed;
@@ -93,7 +94,7 @@ const getNewToken = function getNewToken(oAuth2Client, callback) {
 
 /**
  * Prints the names and majors of students in a sample spreadsheet:
- * @see https://docs.google.com/spreadsheets/d/1BxiMVs0XRA5nFMdKvBdBZjgmUUqptlbs74OgvE2upms/edit
+ * @see https://docs.google.com/spreadsheets/d/1cNb-lVgGn-doFdx-0SZRH5qLb73g_KTHsu1GqvPYrVI/edit
  * @param {google.auth.OAuth2} auth The authenticated Google OAuth client.
  */
 const getInventory = function getInventory(auth) {
@@ -130,6 +131,7 @@ const writeScrap = function writeScrap(auth, row) {
     majorDimension: "ROWS",
     values: [[new Date()]]
   };
+  //update scrap spreadsheet 'date requested' column with current date
   sheets.spreadsheets.values.update(
     {
       spreadsheetId,
@@ -137,6 +139,41 @@ const writeScrap = function writeScrap(auth, row) {
       valueInputOption: "USER_ENTERED",
       resource: { values: [[new Date()]] }
     },
+
+    (err, result) => {
+      if (err) {
+        console.log(err);
+      } else {
+        console.log(result);
+      }
+    }
+  );
+  //update scrap spreadsheet 'date scrapped' column with current date
+  sheets.spreadsheets.values.update(
+    {
+      spreadsheetId,
+      range: `Scrap!F${row}`,
+      valueInputOption: "USER_ENTERED",
+      resource: { values: [[new Date()]] }
+    },
+
+    (err, result) => {
+      if (err) {
+        console.log(err);
+      } else {
+        console.log(result);
+      }
+    }
+  );
+  //update sheet with who pressed the button. Default Jeremy
+  sheets.spreadsheets.values.update(
+    {
+      spreadsheetId,
+      range: `Scrap!G${row}`,
+      valueInputOption: "USER_ENTERED",
+      resource: { values: [["Jeremy"]] }
+    },
+
     (err, result) => {
       if (err) {
         console.log(err);
