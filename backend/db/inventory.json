@@ -1,9 +1,1 @@
-[
-  ["TGT-0307-001-SER", "P3343", "00408CD5C878", "C1145452", 34],
-  ["TGT-0307-001-SER", "P3343", "00408CC6E280", "C1145614", 33],
-  ["TGT-0310-004-SER", "P5532", "00408CAFF807", "C1145939", 32],
-  ["TGT-0363-004-SER", "Q6034", "00408CDAE3D2", "C1145911", 31],
-  ["TGT-0310-004-SER", "P5532", "00408CAFE628", "C1145923", 30],
-  ["TGT-0363-004-SER", "Q6034", "00408CBFECDF", "C1145910", 29],
-  ["TGT-0310-004-SER", "P5532", "00408CAFF80A", "C1145846", 28]
-]
+[{"parNumber":"TGT-0307-001-SER","modelNumber":"P3343","serialNumber":"00408CC6E280","controlNumber":"C1145614","row":33,"display":true,"_id":"fd20404b1a4f406b963d98968c396a68"},{"parNumber":"TGT-0310-004-SER","modelNumber":"P5532","serialNumber":"00408CAFF807","controlNumber":"C1145939","row":32,"display":true,"_id":"e69431b5d36d44f7979c6b5c5470cddf"},{"parNumber":"TGT-0363-004-SER","modelNumber":"Q6034","serialNumber":"00408CDAE3D2","controlNumber":"C1145911","row":31,"display":true,"_id":"50deca06f57846e8a5cad7eac6957349"},{"parNumber":"TGT-0310-004-SER","modelNumber":"P5532","serialNumber":"00408CAFE628","controlNumber":"C1145923","row":30,"display":true,"_id":"dd5e61c3512d441997253de5cf3e58e7"},{"parNumber":"TGT-0363-004-SER","modelNumber":"Q6034","serialNumber":"00408CBFECDF","controlNumber":"C1145910","row":29,"display":true,"_id":"1b77addf3dd549b0a633b9022383d6a6"},{"parNumber":"TGT-0310-004-SER","modelNumber":"P5532","serialNumber":"00408CAFF80A","controlNumber":"C1145846","row":28,"display":true,"_id":"e5dce50ebf15481ab6b3ce247e026920"}]

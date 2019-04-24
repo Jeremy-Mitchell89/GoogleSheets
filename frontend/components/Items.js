@@ -9,17 +9,11 @@ class Items extends react.Component {
       this.setState({ inventory: res.data });
     });
   }
-  refetch = () => {
-    axios.get("http://localhost:8000").then(res => {
-      this.setState({ inventory: res.data });
-    });
-  };
-  passDataUp = serial => {
+  passDataUp = (serial, i) => {
     let newInventory = this.state.inventory.filter(cam => {
-      return cam[2] !== serial;
+      return cam.serialNumber !== serial;
     });
     this.setState({ inventory: newInventory });
-    axios.delete(`http://localhost:8000/inventory/${serial}`);
   };
   render() {
     // const passDataUp = serial => {
@@ -27,15 +21,15 @@ class Items extends react.Component {
     // };
     return (
       <div>
-        {this.state.inventory.map(entry => {
+        {this.state.inventory.map(camera => {
           return (
             <Item
-              key={entry[3]}
-              item={entry[0]}
-              model={entry[1]}
-              serial={entry[2]}
-              control={entry[3]}
-              row={entry[4]}
+              key={camera._id}
+              item={camera.partNumber}
+              model={camera.modelNumber}
+              serial={camera.serialNumber}
+              control={camera.controlNumer}
+              row={camera.row}
               passData={this.passDataUp}
             />
           );

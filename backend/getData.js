@@ -14,13 +14,16 @@ const TOKEN_PATH = "token.json";
 
 // Load client secrets from a local file.
 
-// cron.schedule("*/10 * * * *", () => {
-//   fs.readFile("credentials.json", (err, content) => {
-//     if (err) return console.log("Error loading client secret file:", err);
-//     // Authorize a client with credentials, then call the Google Sheets API.
-//     authorize(JSON.parse(content), getInventory);
-//   });
-// });
+cron.schedule("*/1 * * * *", () => {
+  fs.readFile("credentials.json", (err, content) => {
+    if (err) return console.log("Error loading client secret file:", err);
+    // Authorize a client with credentials, then call the Google Sheets API.
+    console.log("das it mayne");
+    db.inventory.remove({ display: true }, true);
+    authorize(JSON.parse(content), getInventory);
+  });
+});
+
 const run = fs.readFile("credentials.json", (err, content) => {
   if (err) return console.log("Error loading client secret file:", err);
   // Authorize a client with credentials, then call the Google Sheets API.
@@ -30,7 +33,6 @@ function runScrap(row) {
   fs.readFile("credentials.json", (err, content) => {
     if (err) return console.log("Error loading client secret file:", err);
     // Authorize a client with credentials, then call the Google Sheets API.
-    console.log(row);
     authorize(JSON.parse(content), writeScrap, row);
   });
 }
@@ -107,18 +109,25 @@ const getInventory = function getInventory(auth) {
     (err, res) => {
       if (err) return console.log("The API returned an error: " + err);
       const rows = res.data.values;
-      dataList = [];
       if (rows.length) {
         // add row number to value array so we can write scrap date back to sheet
-        rows.map((row, i) => {
-          row.push(i + 3);
-          dataList.push(row);
-        });
+        const dataObj = rows.map((camera, i) => ({
+          parNumber: camera[0],
+          modelNumber: camera[1],
+          serialNumber: camera[2],
+          controlNumber: camera[3],
+          row: i + 3,
+          scrapDate: camera[4],
+          display: true
+        }));
+        db.inventory.save(
+          dataObj.filter(camera => {
+            return camera.scrapDate === undefined;
+          })
+        );
       } else {
         console.log("No data found.");
       }
-      const notScrapped = dataList.filter(camera => camera.length < 6);
-      db.inventory.save(notScrapped);
     }
   );
 };
@@ -126,11 +135,6 @@ const getInventory = function getInventory(auth) {
 const writeScrap = function writeScrap(auth, row) {
   const sheets = google.sheets({ version: "v4", auth });
   var spreadsheetId = "1cNb-lVgGn-doFdx-0SZRH5qLb73g_KTHsu1GqvPYrVI";
-  console.log(row);
-  var request = {
-    majorDimension: "ROWS",
-    values: [[new Date()]]
-  };
   //update scrap spreadsheet 'date requested' column with current date
   sheets.spreadsheets.values.update(
     {

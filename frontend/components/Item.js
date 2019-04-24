@@ -29,7 +29,10 @@ function Item(props) {
   const bull = <span className={classes.bullet}>•</span>;
   function writeToSheet() {
     axios
-      .post("http://localhost:8000/destroy", { row: props.row })
+      .post("http://localhost:8000/destroy", {
+        row: props.row,
+        serial: props.serial
+      })
       .then(res => {
         // console.log(res);
       })
