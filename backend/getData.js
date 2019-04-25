@@ -112,7 +112,7 @@ const getInventory = function getInventory(auth) {
       if (rows.length) {
         // add row number to value array so we can write scrap date back to sheet
         const dataObj = rows.map((camera, i) => ({
-          parNumber: camera[0],
+          partNumber: camera[0],
           modelNumber: camera[1],
           serialNumber: camera[2],
           controlNumber: camera[3],

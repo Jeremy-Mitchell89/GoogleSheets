@@ -1,32 +1,42 @@
-import React, { useState, useEffect } from "react";
-import { withStyles } from "@material-ui/core/styles";
-import Card from "@material-ui/core/Card";
-import CardActions from "@material-ui/core/CardActions";
-import CardContent from "@material-ui/core/CardContent";
-import Button from "@material-ui/core/Button";
-import Typography from "@material-ui/core/Typography";
+import React from "react";
 import axios from "axios";
+import styled from "styled-components";
 
-const styles = {
-  card: {
-    maxWidth: 275
-  },
-  bullet: {
-    display: "inline-block",
-    margin: "0 2px",
-    transform: "scale(0.8)"
-  },
-  title: {
-    fontSize: 12
-  },
-  pos: {
-    marginBottom: 2
+const StyledItem = styled.div`
+  background-color: #1d1f21;
+  color: #c5c8c6;
+  border: 1px solid black;
+  width: 300px;
+  font-family: "Open Sans", sans-serif;
+  padding: 0rem 1rem 1rem 1rem;
+  border-radius: 5px;
+  transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out,
+    border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+  span {
+    font-size: 0.8rem;
   }
-};
+  #serial {
+    background-color: #5a6268;
+    border: 1px solid #5a6268;
+    max-width: 150px;
+  }
+`;
+
+const StyledButton = styled.button`
+  color: #c5c8c6;
+  background-color: #6c757d;
+  border: 1px solid #6c757d;
+  border-radius: 0.25rem;
+  font-size: 1.2rem;
+  padding: 0.4rem;
+  :hover {
+    background-color: #5a6268;
+    border: 1px solid #5a6268;
+  }
+`;
 
 function Item(props) {
-  const { classes, item, model, serial, control, passData } = props;
-  const bull = <span className={classes.bullet}>•</span>;
+  const { item, model, serial, control, passData } = props;
   function writeToSheet() {
     axios
       .post("http://localhost:8000/destroy", {
@@ -41,37 +51,33 @@ function Item(props) {
       });
   }
   return (
-    <Card className={classes.card}>
-      <CardContent>
-        <Typography
-          className={classes.title}
-          color="textSecondary"
-          gutterBottom
+    <StyledItem>
+      <div>
+        <h3>{item}</h3>
+        <p
+          id="serial"
+          onClick={e => {
+            navigator.clipboard.writeText(serial);
+          }}
         >
-          {item}
-        </Typography>
-        <Typography variant="h5" component="h2">
           {serial}
-        </Typography>
-        <Typography className={classes.pos} color="textSecondary">
-          {model}
-        </Typography>
-        <Typography className={classes.pos} color="textSecondary">
-          {control}
-        </Typography>
-      </CardContent>
-      <CardActions>
-        <Button
+        </p>
+
+        <p>{model}</p>
+        <p>{control}</p>
+      </div>
+      <div>
+        <StyledButton
           onClick={e => {
             writeToSheet();
             passData(serial);
           }}
           size="small"
         >
-          Camera Scrapped
-        </Button>
-      </CardActions>
-    </Card>
+          Scrapped
+        </StyledButton>
+      </div>
+    </StyledItem>
   );
 }
-export default withStyles(styles)(Item);
+export default Item;

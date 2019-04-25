@@ -1,10 +1,10 @@
-import react, { useState, useEffect } from "react";
+import react from "react";
 import axios from "axios";
 import Item from "./Item";
 
 class Items extends react.Component {
   state = { inventory: [] };
-  componentWillMount() {
+  componentDidMount() {
     axios.get("http://localhost:8000").then(res => {
       this.setState({ inventory: res.data });
     });
@@ -16,11 +16,9 @@ class Items extends react.Component {
     this.setState({ inventory: newInventory });
   };
   render() {
-    // const passDataUp = serial => {
-    //   //use data here
-    // };
     return (
       <div>
+        <h2>Cameras to Scrap</h2>
         {this.state.inventory.map(camera => {
           return (
             <Item
@@ -34,7 +32,6 @@ class Items extends react.Component {
             />
           );
         })}
-        <button onClick={this.refetch}>Refetch</button>
       </div>
     );
   }
