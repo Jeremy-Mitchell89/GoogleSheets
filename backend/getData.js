@@ -4,7 +4,7 @@ const { google } = require("googleapis");
 const { format } = require("date-fns");
 const cron = require("node-cron");
 let db = require("diskdb");
-db = db.connect("./db", ["inventory"]);
+db = db.connect("./.db", ["inventory"]);
 
 var todayDate = format(new Date(), "MM/DD/YYYY");
 

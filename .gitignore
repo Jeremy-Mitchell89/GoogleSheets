@@ -1,7 +1,7 @@
-db/
 node_modules
 layout.md
 variables.env
 credentials.json
 token.json
 .next/
+.db/
