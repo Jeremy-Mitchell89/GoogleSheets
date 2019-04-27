@@ -1,9 +1,12 @@
 const fs = require("fs");
 const readline = require("readline");
 const { google } = require("googleapis");
+const { format } = require("date-fns");
 const cron = require("node-cron");
 let db = require("diskdb");
 db = db.connect("./db", ["inventory"]);
+
+var todayDate = format(new Date(), "MM/DD/YYYY");
 
 // If modifying these scopes, delete token.json.
 const SCOPES = ["https://www.googleapis.com/auth/spreadsheets"];
@@ -120,11 +123,11 @@ const getInventory = function getInventory(auth) {
           scrapDate: camera[4],
           display: true
         }));
-        db.inventory.save(
-          dataObj.filter(camera => {
-            return camera.scrapDate === undefined;
-          })
-        );
+        const filteredList = dataObj.filter(camera => {
+          return camera.scrapDate === undefined;
+        });
+        filteredList.length ? db.inventory.save(filteredList) : null;
+        //
       } else {
         console.log("No data found.");
       }
@@ -141,14 +144,14 @@ const writeScrap = function writeScrap(auth, row) {
       spreadsheetId,
       range: `Scrap!E${row}`,
       valueInputOption: "USER_ENTERED",
-      resource: { values: [[new Date()]] }
+      resource: { values: [[todayDate]] }
     },
 
     (err, result) => {
       if (err) {
         console.log(err);
       } else {
-        console.log(result);
+        console.log("Successfully written to sheet");
       }
     }
   );
@@ -158,14 +161,14 @@ const writeScrap = function writeScrap(auth, row) {
       spreadsheetId,
       range: `Scrap!F${row}`,
       valueInputOption: "USER_ENTERED",
-      resource: { values: [[new Date()]] }
+      resource: { values: [[todayDate]] }
     },
 
     (err, result) => {
       if (err) {
         console.log(err);
       } else {
-        console.log(result);
+        console.log("Successfully written to sheet");
       }
     }
   );
@@ -182,7 +185,7 @@ const writeScrap = function writeScrap(auth, row) {
       if (err) {
         console.log(err);
       } else {
-        console.log(result);
+        console.log("Successfully written to sheet");
       }
     }
   );
