@@ -19,19 +19,23 @@ class Items extends react.Component {
     return (
       <div>
         <h2>Cameras to Scrap</h2>
-        {this.state.inventory.map(camera => {
-          return (
-            <Item
-              key={camera._id}
-              item={camera.partNumber}
-              model={camera.modelNumber}
-              serial={camera.serialNumber}
-              control={camera.controlNumer}
-              row={camera.row}
-              passData={this.passDataUp}
-            />
-          );
-        })}
+        {this.state.inventory.length ? (
+          this.state.inventory.map(camera => {
+            return (
+              <Item
+                key={camera._id}
+                item={camera.partNumber}
+                model={camera.modelNumber}
+                serial={camera.serialNumber}
+                control={camera.controlNumber}
+                row={camera.row}
+                passData={this.passDataUp}
+              />
+            );
+          })
+        ) : (
+          <div>Scrap list is empty</div>
+        )}
       </div>
     );
   }

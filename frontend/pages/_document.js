@@ -19,7 +19,6 @@ export default class MyDocument extends Document {
             href="https://fonts.googleapis.com/css?family=Open+Sans"
             rel="stylesheet"
           />
-          >
         </Head>
         <body>
           <Main />
