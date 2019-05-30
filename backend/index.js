@@ -2,7 +2,7 @@ const express = require("express");
 const cors = require("cors");
 const bodyParser = require("body-parser");
 var db = require("diskdb");
-db = db.connect("./db", ["inventory"]);
+db = db.connect("./.db", ["inventory"]);
 var utils = require("./getData");
 const app = express();
 
@@ -12,6 +12,11 @@ app.use(bodyParser.json());
 app.get("/", (req, res) => {
   const inventory = db.inventory.find();
   res.json(inventory);
+});
+app.post("/update", (req, res) => {
+  utils.run().then(() => {
+    res.json(db.inventory.find());
+  });
 });
 
 app.post("/destroy", async (req, res) => {

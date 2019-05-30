@@ -17,21 +17,22 @@ const TOKEN_PATH = "token.json";
 
 // Load client secrets from a local file.
 
-cron.schedule("*/1 * * * *", () => {
+// cron.schedule("*/1 * * * *", () => {
+//   fs.readFile("credentials.json", (err, content) => {
+//     if (err) return console.log("Error loading client secret file:", err);
+//     // Authorize a client with credentials, then call the Google Sheets API.
+//     db.inventory.remove({ display: true }, true);
+//     authorize(JSON.parse(content), getInventory);
+//   });
+// });
+
+async function run() {
   fs.readFile("credentials.json", (err, content) => {
     if (err) return console.log("Error loading client secret file:", err);
     // Authorize a client with credentials, then call the Google Sheets API.
-    console.log("das it mayne");
-    db.inventory.remove({ display: true }, true);
     authorize(JSON.parse(content), getInventory);
   });
-});
-
-const run = fs.readFile("credentials.json", (err, content) => {
-  if (err) return console.log("Error loading client secret file:", err);
-  // Authorize a client with credentials, then call the Google Sheets API.
-  authorize(JSON.parse(content), getInventory);
-});
+}
 function runScrap(row) {
   fs.readFile("credentials.json", (err, content) => {
     if (err) return console.log("Error loading client secret file:", err);
@@ -126,8 +127,17 @@ const getInventory = function getInventory(auth) {
         const filteredList = dataObj.filter(camera => {
           return camera.scrapDate === undefined;
         });
-        filteredList.length ? db.inventory.save(filteredList) : null;
-        //
+        filteredList.forEach(cam => {
+          const existingCamera = db.inventory.findOne({
+            serialNumber: cam.serialNumber
+          });
+          if (existingCamera) {
+            console.log("Camera Already in DB");
+          } else {
+            db.inventory.save(cam);
+          }
+        });
+        // filteredList.length ? db.inventory.save(filteredList) : null;
       } else {
         console.log("No data found.");
       }
