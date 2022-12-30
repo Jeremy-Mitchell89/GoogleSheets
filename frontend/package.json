@@ -19,7 +19,7 @@
     "diskdb": "^0.1.17",
     "express": "^4.16.4",
     "googleapis": "^27.0.0",
-    "next": "^8.0.4",
+    "next": "^13.1.1",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
     "styled-components": "^4.2.0"
